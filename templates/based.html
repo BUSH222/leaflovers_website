@@ -1,19 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="stylesheet" href="static/based.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <title>Based or cringe?</title>
     </head>
     <body>
         <div class="d-flex justify-content-center px-4 mt-5">
+            <img id="imagecringe" src="/static/cringe.png" alt="">
+            <img id="imagebased" src="/static/based.png" alt="">
             <div class="input-group mb-3" style="max-width: 500px; width: 100%;">
                 <span class="input-group-text" id="basic-addon3">Is this based?</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                <input type="text" class="form-control" id="basic_input" aria-describedby="basic-addon3">
             </div>
         </div>
-        
+
     </body>
     <script>
+        hashCode = s => s.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)
 
+        function startAnimation(img) {
+            var img = document.getElementById(img);
+            img.style.display = "block"; // Show the image
+            img.style.transform = "translate(-50%, -50%) scale(0) rotate(0deg)"; // Initial state
+
+            let scale = 0;  // Start size
+            let rotation = 0;  // Start rotation
+            const transparencyAngle = 2*360;
+            const maxAngle = 3*360;  // Max scale based on screen width
+            const interval = setInterval(() => {
+                scale += 0.01;  // Increase scale each step
+                rotation += 5;  // Rotate 5 degrees each step
+                img.style.transform = `translate(-50%, -50%) scale(${scale}) rotate(${rotation}deg)`;
+                
+                // Stop animation when max scale is reached
+                if (rotation >= maxAngle) {
+                    clearInterval(interval);
+                    img.style.display = "none";  // Hide the image
+                } else if (rotation >= transparencyAngle) {
+                    img.style.opacity = (maxAngle-rotation)/360
+                } 
+            }, 20);  // 20ms interval for smoother animation
+        }
+        
+        const textinput = document.getElementById('basic_input');
+        textinput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter'){
+                if (hashCode(document.getElementById('basic_input').value) % 2 == 0){
+                    console.log('cringe')
+                    startAnimation("imagecringe")
+                } else {
+                    console.log('based')
+                    startAnimation("imagebased") // FACTS: tedvt => based
+                }
+            }
+        });
     </script>
 </html>
